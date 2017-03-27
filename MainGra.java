@@ -1,4 +1,14 @@
 import java.util.Random;
+import java.io.IOException;
+
+
+public class MainGra {
+	public static void main(String[] args) {
+		Game gra1 = new Game(args);
+		
+		gra1.graj();
+	}
+}
 
 class Game{
 	private final int N;
@@ -46,12 +56,14 @@ class Game{
 	int pobierzLiczbe(){
 		int liczba = 0;
 		do{
-			if (liczba == 0)
-				System.out.println("Podaj liczbe: ");
-			else
-				System.out.println("Wprowadzono bledna liczbe! Sprobuj jeszcze raz. Pamietaj, ze musi ona byc wieksza od " + MIN_ZAKRES + 
-						           " i mniejsza od " + N + ".");
-			liczba = System.in.read();
+			System.out.println("Podaj liczbe. Pamietaj, ze musi ona byc wieksza od " + MIN_ZAKRES + 
+						           " i mniejsza od " + N + ": ");
+			try{
+				liczba = System.in.read();
+			}catch(IOException ReadException){
+				System.out.println("Argument nie mogl byc pobrany!");
+				System.exit(-1);
+			}
 		}while(liczba < 0 || liczba > N);
 		
 		return liczba;
@@ -81,18 +93,22 @@ class Game{
 	}
 	
 	void graj (){
-		boolean winner = kolejkaGry();
-		
+		boolean winner;
+		do{
+			winner = kolejkaGry();
+			if(koniec == true){
+				return;
+			}
+			if(winner == false) {
+				winner = graj();
+			}else {
+			
+			}
+		}while(koniec == true);
 	}
 }
 
-public class MainGra {
-	public static void main(String[] args) {
-		Game gra1 = new Game(args);
-		
-		gra1.graj();
-		
-		return;
-	}
-};
+
+	
+
 
