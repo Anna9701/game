@@ -100,9 +100,7 @@ class Game{
 					return;
 				}
 			}
-			if (winner == false) {
-				graj();
-			} else if (winner == true) {
+			if (winner == true) {
 				int odp;
 				System.out.println("Czy chcesz grac dalej? N, aby zakonczyc");
 				try {
