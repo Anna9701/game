@@ -1,6 +1,6 @@
 import java.util.Random;
 import java.io.IOException;
-
+import java.util.Scanner; 
 
 public class MainGra {
 	public static void main(String[] args) {
@@ -58,12 +58,9 @@ class Game{
 		do{
 			System.out.println("Podaj liczbe. Pamietaj, ze musi ona byc wieksza od " + MIN_ZAKRES + 
 						           " i mniejsza od " + N + ": ");
-			try{
-				liczba = System.in.read();
-			}catch(IOException ReadException){
-				System.out.println("Argument nie mogl byc pobrany!");
-				System.exit(-1);
-			}
+			@SuppressWarnings("resource")
+			Scanner scan = new Scanner(System.in);
+			liczba = scan.nextInt();
 		}while(liczba < 0 || liczba > N);
 		
 		return liczba;
@@ -76,14 +73,14 @@ class Game{
 		++wykprob;
 
 		if (liczba == liczbadocelowa)
-			wygrana = true;
+			 wygrana = true;
 		else if ( liczbadocelowa < liczba)
 			System.out.println("Wylosowana liczba jest mniejsza od podanej!");
 		else
 			System.out.println("Wylosowana liczba jest wieksza od podanej!");
 		
-		if(wykprob <= MAX_PROB)
-			System.out.println("Zostalo Ci jeszcze: " + (MAX_PROB-wykprob) + " prob. Probuj dalej!");
+		if(wykprob < MAX_PROB)
+			System.out.println("Zostalo Ci jeszcze: " + (MAX_PROB-wykprob) + " prob.");
 		else{
 			System.out.println("Niestety to koniec gry! Moze nastepnym razem bedziesz miec wiecej szczescia?");
 			koniec = true;
@@ -94,17 +91,34 @@ class Game{
 	
 	void graj (){
 		boolean winner;
+	
 		do{
 			winner = kolejkaGry();
-			if(koniec == true){
-				return;
+			if(winner == true) {
+				System.out.println("Gratulacje, wygrales!");
+				if (koniec == true) {
+					return;
+				}
 			}
-			if(winner == false) {
-				winner = graj();
-			}else {
-			
+			if (winner == false) {
+				graj();
+			} else if (winner == true) {
+				int odp;
+				System.out.println("Czy chcesz grac dalej? N, aby zakonczyc");
+				try {
+					odp = System.in.read();
+				} catch (IOException ReadException2) {
+					System.out.println("Nie udalo sie odczytac odpowiedzi!");
+					return;
+				}
+				if (Character.toUpperCase(odp) == 'N') {
+					koniec = true;
+					return;
+				} else {
+					wylosuj();
+				}	
 			}
-		}while(koniec == true);
+		} while(koniec != true);
 	}
 }
 
