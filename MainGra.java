@@ -32,7 +32,7 @@ class Game{
 			System.exit(3);
 		}
 		if(x < MIN_ZAKRES){
-			System.out.println("Limit nie moze byc mniejszy od 0!");
+			System.out.println("Limit nie moze byc mniejszy od " + MIN_ZAKRES);
 			System.exit(1);
 		}	
 		N = x;
@@ -41,33 +41,35 @@ class Game{
 	
 	Game (int x){
 		if(x < MIN_ZAKRES){
-			System.out.println("Limit nie moze byc mniejszy od 0!");
+			System.out.println("Limit nie moze byc mniejszy od " + MIN_ZAKRES);
 			System.exit(1);
 		}
 		N = x;
 		wylosuj();
 	}
 	
-	void wylosuj (){
+	private void wylosuj (){
 		Random generator = new Random();
 		liczbadocelowa = generator.nextInt(N);
 	}
 	
-	int pobierzLiczbe(){
-		int liczba = 0;
-		do{
-			System.out.println("Podaj liczbe. Pamietaj, ze musi ona byc wieksza od " + MIN_ZAKRES + 
+	private int pobierzLiczbe(){
+		int liczba;
+		Scanner in = new Scanner(System.in);
+		while(true){
+			System.out.println("Podaj liczbe. Pamietaj, ze musi ona byc wieksza rowna od " + MIN_ZAKRES + 
 						           " i mniejsza od " + N + ": ");
-			@SuppressWarnings("resource")
-			Scanner scan = new Scanner(System.in);
-			liczba = scan.nextInt();
-		}while(liczba < 0 || liczba > N);
-		
-		return liczba;
+			try {
+				liczba = in.nextInt();
+				return liczba;
+			} catch (java.util.InputMismatchException e) {
+				in.nextLine();	
+			}
+		}
 	}
 	
 	
-	boolean kolejkaGry(){
+	private boolean kolejkaGry(){
 		int liczba = pobierzLiczbe();
 		boolean wygrana = false;
 		++wykprob;
@@ -90,17 +92,14 @@ class Game{
 	}
 	
 	void graj (){
-		boolean winner;
+		boolean wygrana;
 	
 		do{
-			winner = kolejkaGry();
-			if(winner == true) {
-				System.out.println("Gratulacje, wygrales!");
-				if (koniec == true) {
-					return;
-				}
-			}
-			if (winner == true) {
+			wygrana = kolejkaGry();
+			if(wygrana == true) {
+				System.out.println("Gratulacje, wygrales! To byla twoja " + wykprob + " proba.");
+				wykprob = 0;
+			
 				int odp;
 				System.out.println("Czy chcesz grac dalej? N, aby zakonczyc");
 				try {
@@ -111,12 +110,17 @@ class Game{
 				}
 				if (Character.toUpperCase(odp) == 'N') {
 					koniec = true;
-					return;
 				} else {
 					wylosuj();
 				}	
 			}
 		} while(koniec != true);
+	}
+	
+	void reset (){
+		koniec = false;
+		wykprob = 0;
+		wylosuj();
 	}
 }
 
